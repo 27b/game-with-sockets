@@ -2,22 +2,40 @@ import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js"
 
 const socket = io();
 
-var username = prompt('Username:')
+class User {
 
-var user_credentials = null
+    constructor () {
+        this.username = null
+        this.secret_key = null
+    }
 
-// Socket send messages:
-socket.emit('new_user', username)
+    set_username(username) {
+        this.username = username
+    }
+
+    set_secret_key(secret_key) {
+        this.secret_key = secret_key
+    }
+
+    check_if_username_is_valid() {
+        let username = prompt('Username:')
+        socket.emit('new_user', username)
+    }
+
+}
+
+var user = new User()
+
+user.check_if_username_is_valid()
 
 // Socket receive messages:
 socket.on('new_user', new_user => {
     if (new_user != 'Username in use.'){
-        user_credentials = new_user
+        user.set_username = new_user['username']
+        user.set_secret_key = new_user['secret_key']
     }
     else {
-        username = prompt('Username:')
-        socket.emit('new_user', username)
-
+        user.check_if_username_is_valid()
     }
     console.log(new_user)
 })
