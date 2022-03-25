@@ -22,6 +22,14 @@ class User {
         socket.emit('new_user', username)
     }
 
+    move_to(x, y) {
+        socket.emit('user_direction', {
+            'username': this.username,
+            'secret_key': this.secret_key,
+            'point': [x, y]
+        })
+    }
+
 }
 
 var user = new User()
