@@ -1,4 +1,4 @@
-import Socket from "./socket";
+import Socket from "./socket.js";
 
 export default class Map {
     constructor(id, socket) {
@@ -22,11 +22,11 @@ export default class Map {
 
             console.log(`Loading map with ${cols} columns and ${rows} rows`)
 
-            for (let i = 0; i < cols; i++) {
+            for (let i = 0; i < rows; i++) {
                 row.appendChild(document.createElement("div"));
             }
 
-            for (let i = 0; i < rows; i++) {
+            for (let i = 0; i < cols; i++) {
                 let new_row = row.cloneNode(true)
                 container.appendChild(new_row);
             }
