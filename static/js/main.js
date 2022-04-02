@@ -1,13 +1,11 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
-import Socket from './socket'
-import Map from './socket'
-import User from './user'
+import Map from './map.js';
+import User from './user.js';
 
 
 const socket = io();
-const Socket = Socket(socket)
-const user = new User(Socket);
-const map = new Map("container", Socket);
+const user = new User(socket);
+const map = new Map("container", socket);
 
 
 user.check_if_username_is_valid();

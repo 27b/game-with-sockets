@@ -1,5 +1,3 @@
-import Socket from "./socket.js";
-
 export default class Map {
     constructor(id, socket) {
         this.element_id = id;
@@ -62,7 +60,7 @@ export default class Map {
 
     /**
      * Get the map state and send to set_map_state to print in the screen.
-     * @param {Socket} socket 
+     * @param {object} socket 
      */
     get_map_state(socket) {
         socket.emit("map", () => {});
