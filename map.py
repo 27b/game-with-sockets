@@ -36,6 +36,12 @@ if __name__ == '__main__':
     map = Map()
     map.set_map(10, 10, value=None)
 
+    # Check set_map
+    assert map.map[0][0] == None
+
+    # Check get_map
+    assert bool(map.get_map()) == True
+
     # Check if point in map
     assert map.check_if_point_in_map(0, 0) == True
     assert map.check_if_point_in_map(0, -1) == False
@@ -47,6 +53,9 @@ if __name__ == '__main__':
     assert map.set_point_in_map(0, -99, 'User 3') == False
     assert map.set_point_in_map(0, 0, ':D') == True
     assert map.set_point_in_map(1, 1, ':)') == True
+
+    # Check if point in map
+    assert map.check_if_point_in_use(0, 2) == True
 
     map.map[0][2] = 99
 
