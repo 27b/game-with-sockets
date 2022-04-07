@@ -33,25 +33,24 @@ class Map:
 
 
 if __name__ == '__main__':
-    # Create map
     map = Map()
     map.set_map(10, 10, value=None)
 
     # Check if point in map
-    print(map.check_if_point_in_map(0, 0))        # True
-    print(map.check_if_point_in_map(0, -1))       # False
+    assert map.check_if_point_in_map(0, 0) == True
+    assert map.check_if_point_in_map(0, -1) == False
 
     # Set point in map
-    print(map.set_point_in_map(0, 0, 'User 1'))   # True
-    print(map.set_point_in_map(0, 2, 'User 2'))   # True
-
-    print(map.set_point_in_map(0, 99, 'User 3'))  # False
-    print(map.set_point_in_map(0, -99, 'User 3')) # False
-
-    print(map.set_point_in_map(0, 0, ':D'))       # True
-    print(map.set_point_in_map(1, 1, ':)'))       # True
+    assert map.set_point_in_map(0, 0, 'User 1') == True
+    assert map.set_point_in_map(0, 2, 'User 2') == True
+    assert map.set_point_in_map(0, 99, 'User 3') == False
+    assert map.set_point_in_map(0, -99, 'User 3') == False
+    assert map.set_point_in_map(0, 0, ':D') == True
+    assert map.set_point_in_map(1, 1, ':)') == True
 
     map.map[0][2] = 99
+
+    assert map.map[0][2] == 99, 'The number of map[0][2] is diferent to 99'
 
     for row in map.map:
         print(row)

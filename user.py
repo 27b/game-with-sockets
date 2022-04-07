@@ -22,7 +22,7 @@ class User:
         return True
 
     @staticmethod
-    def check_user_credentials(username, secret_key) -> bool:
+    def check_user_credentials(username: str, secret_key: str) -> bool:
         for index, user in enumerate(users):
             if user['username'] == username and \
                user['secret_key'] == secret_key:
@@ -58,4 +58,7 @@ class User:
 
 if __name__ == '__main__': 
     random_list_x_and_y = User.generate_random_position(15, 15)
-    print(random_list_x_and_y)
+    assert random_list_x_and_y[0] >= 0
+    assert random_list_x_and_y[1] >= 0
+    assert random_list_x_and_y[0] <= 15
+    assert random_list_x_and_y[1] <= 15
