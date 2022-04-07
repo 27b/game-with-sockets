@@ -22,7 +22,7 @@ class User:
         return True
 
     @staticmethod
-    def check_user_credentials(username: str, secret_key: str) -> bool:
+    def check_user_credentials(username: str, secret_key: str) -> str | bool:
         for index, user in enumerate(users):
             if user['username'] == username and \
                user['secret_key'] == secret_key:
@@ -56,8 +56,34 @@ class User:
         return [x, y]
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__':
+    from uuid import uuid4
+
+    # Check check_if_username_valid
+    username = 'Orion'
+    assert User.check_if_username_valid(username) == True
+
+    # Check add_user_in_database
+    user = {
+        'username': username,
+        'secret_key': uuid4().hex,
+        'position': User.generate_random_position(15, 15)
+    }
+
+    User.add_user_in_database(user)
+
+    assert users[0]['username'] == username
+    assert User.check_if_username_valid(username) == False
+
+    # Check user credentials
+    secret_key = user['secret_key']
+
+    assert User.check_user_credentials(username, secret_key) == '0'
+    assert User.check_user_credentials('Random', 'aaabbbccc') == False
+
+    # Check random list generator
     random_list_x_and_y = User.generate_random_position(15, 15)
+
     assert random_list_x_and_y[0] >= 0
     assert random_list_x_and_y[1] >= 0
     assert random_list_x_and_y[0] <= 15
