@@ -1,17 +1,18 @@
 export default class User {
-    constructor(Socket) {
-        this.socket = Socket;
+    constructor(socket) {
+        this.socket = socket;
         this.credentials = {
             username: null,
             secret_key: null
         }
+        this.position = null;
     }
 
     /**
      * Private method to set username.
      * @param {string} username 
      */
-    set_username(username) {
+    set username(username) {
         this.credentials['username'] = username;
     }
 
@@ -19,7 +20,7 @@ export default class User {
      * Private method to set secret_key.
      * @param {string} secret_key 
      */
-    set_secret_key(secret_key) {
+    set secret_key(secret_key) {
         this.credentials['secret_key'] = secret_key;
     }
 
@@ -33,17 +34,6 @@ export default class User {
             ...this.credentials,
             ...{data: data},
         });
-        this.socket.on(address, data => {
-            return data;
-        });
-    }
-
-    /**
-     * Get position of actual user.
-     * @returns {Array}
-     */
-    get_position() {
-        return this.emit_with_credentials_and_get_result("user_position", {});
     }
 
     /**
@@ -51,7 +41,7 @@ export default class User {
      */
     check_if_username_is_valid() {
         let username = prompt("Username:");
-        socket.emit("new_user", username);
+        this.socket.emit("new_user", username);
     }
 
     /**
@@ -60,10 +50,12 @@ export default class User {
      * @param {int} y 
      */
     move_to(x, y) {
-        this.socket.emit("user_direction", {
-            username: this.username,
-            secret_key: this.secret_key,
+        this.emit_with_credentials("user_direction", {
             point: [x, y],
         });
+        
+        this.socket.on('user_direction', position => {
+            this.position = position
+        })
     }
 }
