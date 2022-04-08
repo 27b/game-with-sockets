@@ -14,8 +14,9 @@ user.check_if_username_is_valid();
 // Set new user
 socket.on("new_user", (new_user) => {
     if (new_user != "Username in use.") {
-        user.set_username = new_user["username"];
-        user.set_secret_key = new_user["secret_key"];
+        user.username = new_user["username"];
+        user.secret_key = new_user["secret_key"];
+        user.position = new_user["position"];
     } else {
         user.check_if_username_is_valid();
     }
@@ -25,10 +26,21 @@ socket.on("new_user", (new_user) => {
 
 // User controller
 if (user.username !== null && user.secret_key !== null) {
-    coordenates = user.get_position();
     document.addEventListener("keydown", (event) => {
-        if (event.code) {
-            console.log(event.code);
+        
+        let [x, y] = user.position
+
+        if (event.code == 'ArrowUp') {
+            user.move_to(x, y-1)
+        }
+        if (event.code == 'ArrowDown') {
+            user.move_to(x, y+1)
+        }
+        if (event.code == 'ArrowLeft') {
+            user.move_to(x-1, y)
+        }
+        if (event.code == 'ArrowRight') {
+            user.move_to(x+1, y)
         }
     });
 }
