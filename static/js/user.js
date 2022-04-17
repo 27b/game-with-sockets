@@ -2,26 +2,9 @@ export default class User {
     constructor(socket) {
         this.socket = socket;
         this.credentials = {
-            username: null,
-            secret_key: null
+            username: localStorage.getItem('username'),
+            secret_key: localStorage.getItem('secret_key')
         }
-        this.position = null;
-    }
-
-    /**
-     * Private method to set username.
-     * @param {string} username 
-     */
-    set username(username) {
-        this.credentials['username'] = username;
-    }
-
-    /**
-     * Private method to set secret_key.
-     * @param {string} secret_key 
-     */
-    set secret_key(secret_key) {
-        this.credentials['secret_key'] = secret_key;
     }
 
     /**
@@ -53,9 +36,10 @@ export default class User {
         this.emit_with_credentials("user_direction", {
             point: [x, y],
         });
-        
+
         this.socket.on('user_direction', position => {
-            this.position = position
+            localStorage.setItem('position', JSON.stringify(position))
+            console.log(position)
         })
     }
 }

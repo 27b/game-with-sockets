@@ -7,16 +7,19 @@ const socket = io();
 const user = new User(socket);
 const map = new Map("container", socket);
 
+const username = localStorage.getItem('username')
+const secret_key = localStorage.getItem('secret_key')
 
-user.check_if_username_is_valid();
-
+if (!username && !secret_key) {
+    user.check_if_username_is_valid();
+}
 
 // Set new user
-socket.on("new_user", (new_user) => {
+socket.on("new_user", new_user => {
     if (new_user != "Username in use.") {
-        user.username = new_user["username"];
-        user.secret_key = new_user["secret_key"];
-        user.position = new_user["position"];
+        localStorage.setItem('username', new_user["username"]);
+        localStorage.setItem('secret_key', new_user["secret_key"]);
+        localStorage.setItem('position', JSON.stringify(new_user["position"]));
     } else {
         user.check_if_username_is_valid();
     }
@@ -24,11 +27,15 @@ socket.on("new_user", (new_user) => {
 });
 
 
+map.get_map_state(socket);
+
+
 // User controller
-if (user.username !== null && user.secret_key !== null) {
+if (localStorage.getItem('username') !== null &&
+    localStorage.getItem('secret_key') !== null) {
     document.addEventListener("keydown", (event) => {
         
-        let [x, y] = user.position
+        let [x, y] = JSON.parse(localStorage.getItem('position'))
 
         if (event.code == 'ArrowUp') {
             user.move_to(x, y-1)

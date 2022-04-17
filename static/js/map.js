@@ -32,15 +32,14 @@ export default class Map {
     }
 
     /**
-     * Set the map state, is used in the get_map_state method to set
-     * the data values in the map.
+     * Set the map state, is used in the get_map_state method to update
+     * the values in the map.
      * @param {Array} data 
      */
     set_map_state(data) {
         const container = document.getElementById(this.element_id);
+        const username = localStorage.getItem('username')
         const map = data;
-
-        console.log(map);
 
         for (let y = 0; y < map.length; y++) {
             const row = container.children[y];
@@ -50,9 +49,13 @@ export default class Map {
                 const tile_state = map[x][y];
 
                 if (tile_state) {
-                    tile.innerHTML = tile_state;
+                    if (tile_state == username) {
+                        tile.innerHTML = `<div class="green" title="${tile_state}"></div>`;
+                    } else {
+                        tile.innerHTML = `<div class="red" title="${tile_state}"></div>`;
+                    }
                 } else {
-                    tile.innerHTML = "0";
+                    tile.innerHTML = " ";
                 }
             }
         }
