@@ -4,13 +4,6 @@
     box-sizing: border-box;
 }
 
-.ball {
-    background: red!important;
-    width: 12px!important;
-    height: 12px!important;
-    border-radius: 10px!important;
-}
-
 #container {
     display: flex;
     flex-direction: row;
@@ -26,10 +19,16 @@
 #container div div {
     border-radius: 1px;
     background: #ccc;
-    box-shadow: 0 2px 0px 0.1px #888;
     width: 20px;
     height: 20px;
     text-align: center;
-    margin: 1px 2px;
-    transform: perspective(600px) rotateX(20deg);
+    transition: background 1s;
+}
+
+#container div div .red {
+    background-color: red;
+}
+
+#container div div .green {
+    background-color: limegreen;
 }
