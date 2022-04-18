@@ -23,6 +23,16 @@ class User:
 
     @staticmethod
     def check_user_credentials(username: str, secret_key: str) -> str | bool:
+        '''Check if the user exists in the users array.
+        
+        Args:
+            username: str
+            secret_key: str
+        
+        Returns:
+            str: If the user exists.
+            bool (False): If the user does not exist.
+        '''
         for index, user in enumerate(users):
             if user['username'] == username and \
                user['secret_key'] == secret_key:
@@ -60,7 +70,7 @@ if __name__ == '__main__':
     from uuid import uuid4
 
     # Check check_if_username_valid
-    username = 'Orion'
+    username = 'John Doe'
     assert User.check_if_username_valid(username) == True
 
     # Check add_user_in_database

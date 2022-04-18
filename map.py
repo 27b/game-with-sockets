@@ -5,27 +5,36 @@ class Map:
         self.value = None
     
     def set_map(self, rows: int, cols: int, value=0) -> None:
+        '''Set the map dimensions.'''
         self.value = value
         self.map = [
             [value for i in range(cols)] for j in range(rows)
         ]
     
     def get_map(self) -> list:
+        '''Returns the map of the created instance.'''
         return self.map
 
     def check_if_point_in_map(self, x: int, y: int) -> bool:
+        '''Check if the point exists in the map.'''
         if x >= 0 and x <= len(self.map) and \
            y >= 0 and y <= len(self.map[0]):
             return True
         return False
     
     def check_if_point_in_use(self, x: int, y: int) -> bool:
+        '''Check if a point on the map is available, for this use the
+        method check_if_point_in_map to check if that point is in
+        the range of the map.'''
         if self.check_if_point_in_map(x, y):
             if self.map[y][x] != self.value:
                 return True
         return False
 
     def set_point_in_map(self, x: int, y: int, value) -> bool:
+        '''Set point in the map, for this use the method
+        check_if_point_in_map to check if that point is in the range of
+        the map.'''
         if self.check_if_point_in_map(x, y):
             self.map[y][x] = value
             return True
