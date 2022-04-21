@@ -10,11 +10,21 @@ const map = new Map("container", socket);
 const username = localStorage.getItem('username')
 const secret_key = localStorage.getItem('secret_key')
 
-if (!username && !secret_key) {
+if (username && secret_key) {
+    user.emit_with_credentials('user_is_authenticated', {
+        'username': username,
+        'secret_key': secret_key
+    })
+} else {
     user.check_if_username_is_valid();
 }
 
-// Set new user
+socket.on('user_is_authenticated', bool => {
+    if (!bool) {
+        user.check_if_username_is_valid();
+    }
+})
+
 socket.on("new_user", new_user => {
     if (new_user != "Username in use.") {
         localStorage.setItem('username', new_user["username"]);

@@ -49,6 +49,9 @@ def register_new_user(username: str):
 
     '''
     if User.check_if_username_valid(username):
+        '''Check if the username and secret key of the client is
+        still stored on the server.
+        '''
         new_user = {
             'username': username,
             'secret_key': uuid4().hex,
@@ -60,6 +63,17 @@ def register_new_user(username: str):
     else:
         emit('new_user', 'Username in use.')
 
+
+@socketio.on('user_is_authenticated')
+def user_is_authenticated(data):
+    username = data['username']
+    secret_key = data['secret_key']
+    credentials = User.check_user_credentials(username, secret_key)
+    if credentials:
+        emit('user_is_authenticated', True)
+    else:
+        emit('user_is_authenticated', False)
+        
 
 @socketio.on('map_print_instructions')
 def send_map_printing_instructions():
