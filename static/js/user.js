@@ -1,7 +1,10 @@
 export default class User {
     constructor(socket) {
         this.socket = socket;
-        this.credentials = {
+    }
+
+    get_credentials() {
+        return {
             username: localStorage.getItem('username'),
             secret_key: localStorage.getItem('secret_key')
         }
@@ -14,7 +17,7 @@ export default class User {
      */
     emit_with_credentials(address, data) {
         this.socket.emit(address, {
-            ...this.credentials,
+            ...this.get_credentials(),
             ...{data: data},
         });
     }
@@ -22,7 +25,7 @@ export default class User {
     /**
      * Check if the username is valid.
      */
-    check_if_username_is_valid() {
+    create_login_input() {
         let username = prompt("Username:");
         this.socket.emit("new_user", username);
     }
@@ -36,10 +39,5 @@ export default class User {
         this.emit_with_credentials("user_direction", {
             point: [x, y],
         });
-
-        this.socket.on('user_direction', position => {
-            localStorage.setItem('position', JSON.stringify(position))
-            console.log(position)
-        })
     }
 }

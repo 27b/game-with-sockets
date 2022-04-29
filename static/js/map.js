@@ -1,6 +1,6 @@
 export default class Map {
-    constructor(id, socket) {
-        this.element_id = id;
+    constructor(container, socket) {
+        this.container = container
         this.map_instructions = this.set_map(socket);
         this.map = this.get_map_state(socket);
     }
@@ -9,26 +9,7 @@ export default class Map {
      * Get the map instruction (cols and rows) and print the map.
      */
     set_map(socket) {
-        const container = document.getElementById(this.element_id);
-
         socket.emit("map_print_instructions", () => {});
-
-        socket.on("map_print_instructions", (data) => {
-            const cols = data["cols"];
-            const rows = data["rows"];
-            const row = document.createElement("div");
-
-            console.log(`Loading map with ${cols} columns and ${rows} rows`)
-
-            for (let i = 0; i < rows; i++) {
-                row.appendChild(document.createElement("div"));
-            }
-
-            for (let i = 0; i < cols; i++) {
-                let new_row = row.cloneNode(true)
-                container.appendChild(new_row);
-            }
-        });
     }
 
     /**
@@ -37,9 +18,11 @@ export default class Map {
      * @param {Array} data 
      */
     set_map_state(data) {
-        const container = document.getElementById(this.element_id);
+        const container = this.container
         const username = localStorage.getItem('username')
         const map = data;
+
+        console.log(data)
 
         for (let y = 0; y < map.length; y++) {
             const row = container.children[y];
@@ -50,9 +33,15 @@ export default class Map {
 
                 if (tile_state) {
                     if (tile_state == username) {
-                        tile.innerHTML = `<div class="green" title="${tile_state}"></div>`;
+                        tile.innerHTML = `
+                        <div class="green" title="${tile_state}">
+                            👀 <span class="hat"></span>
+                        </div>`;
                     } else {
-                        tile.innerHTML = `<div class="red" title="${tile_state}"></div>`;
+                        tile.innerHTML = `
+                        <div class="red" title="${tile_state}">
+                            👺
+                        </div>`;
                     }
                 } else {
                     tile.innerHTML = " ";
@@ -67,10 +56,5 @@ export default class Map {
      */
     get_map_state(socket) {
         socket.emit("map", () => {});
-
-        socket.on("map", (data) => {
-            console.log(data);
-            this.set_map_state(data);
-        });
     }
 }
