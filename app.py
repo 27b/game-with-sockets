@@ -1,3 +1,4 @@
+from re import T
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 from dotenv import load_dotenv
@@ -32,7 +33,7 @@ map.set_map(rows, cols, value=n_value)
 
 
 # Aux functions
-def send_map_status_to_clients():
+def emit_map_status_to_clients():
     '''Sends the map state (list) values to all users.'''
     map_data = map.get_map()
     socketio.emit('map', map_data, broadcast=True)
@@ -49,31 +50,34 @@ def register_new_user(username: str):
 
     '''
     if User.check_if_username_valid(username):
-        '''Check if the username and secret key of the client is
-        still stored on the server.
-        '''
+        x_and_y = User.generate_random_position(rows, cols)
         new_user = {
             'username': username,
             'secret_key': uuid4().hex,
-            'position': User.generate_random_position(rows, cols)
+            'position': x_and_y
         }
         User.add_user_in_database(new_user)
+        map.set_point_in_map(x_and_y[0], x_and_y[1], username)
         emit('new_user', new_user)
-        send_map_status_to_clients()
+        emit_map_status_to_clients()
     else:
         emit('new_user', 'Username in use.')
 
 
 @socketio.on('user_is_authenticated')
 def user_is_authenticated(data):
+    '''Check if the username and secret key of the client is
+    still stored on the server.
+    '''
     username = data['username']
     secret_key = data['secret_key']
     credentials = User.check_user_credentials(username, secret_key)
     if credentials:
         emit('user_is_authenticated', True)
+        print(True)
     else:
         emit('user_is_authenticated', False)
-        
+        print(False)
 
 @socketio.on('map_print_instructions')
 def send_map_printing_instructions():
@@ -99,19 +103,21 @@ def user_direction(data):
         data: dict with username, secret_key, and point (list of two values)
 
     '''
-    username = data['username']
-    secret_key = data['secret_key']
-    x, y = data['data']['point']
-    credentials = User.check_user_credentials(username, secret_key)
-    if credentials and map.check_if_point_in_map(x, y):
-        user = users[int(credentials)]
-        old_x, old_y = user['position']
-        map.set_point_in_map(old_x, old_y, n_value)  # Clean old point in map
-        user['position'] = [x, y]                    # Set point in user data
-        map.set_point_in_map(x, y, user['username']) # Set new point in map
-        emit('user_direction', [x, y])               # Send new values to user
-        send_map_status_to_clients()                 # Update map for everyone
-
+    try:
+        username = data['username']
+        secret_key = data['secret_key']
+        x, y = data['data']['point']
+        credentials = User.check_user_credentials(username, secret_key)
+        if credentials and map.check_if_point_in_map(x, y):
+            user = users[int(credentials)]
+            old_x, old_y = user['position']
+            map.set_point_in_map(old_x, old_y, n_value)  # Clean old point in map
+            user['position'] = [x, y]                    # Set point in user data
+            map.set_point_in_map(x, y, user['username']) # Set new point in map
+            emit('user_direction', [x, y])               # Send new values to user
+            emit_map_status_to_clients()                 # Update map for everyone
+    except Exception as error:
+        emit('error', str(error))
 
 # Endpoints
 @app.route('/', methods=['GET'])
