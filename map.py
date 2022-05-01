@@ -17,8 +17,8 @@ class Map:
 
     def check_if_point_in_map(self, x: int, y: int) -> bool:
         '''Check if the point exists in the map.'''
-        if x >= 0 and x <= len(self.map) and \
-           y >= 0 and y <= len(self.map[0]):
+        if x >= 0 and x < len(self.map) and \
+           y >= 0 and y < len(self.map[0]):
             return True
         return False
     
