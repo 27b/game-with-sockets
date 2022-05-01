@@ -27,8 +27,20 @@
 
 #container div div .red {
     background-color: red;
+    border-radius: 25%;
 }
 
 #container div div .green {
     background-color: limegreen;
+    border-radius: 50%;
+}
+
+.hat {
+    width: 44px;
+    height: 20px;
+    background-image: url('https://images.vexels.com/media/users/3/153779/isolated/preview/46cc7b82916113e4581711ef0a106d8d-icono-de-sombrero-de-mago.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    margin: -13px -20px;
 }
