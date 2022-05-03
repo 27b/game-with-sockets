@@ -1,4 +1,3 @@
-from re import T
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 from dotenv import load_dotenv
@@ -16,16 +15,13 @@ app.config['SECRET_KEY'] = getenv('SECRET_KEY')
 
 app.config['DEBUG'] = eval(getenv('DEBUG'))
 
-app.config['PORT'] = 5000
-
 socketio = SocketIO(app)
-
 
 map = Map()
 
-rows = 10
+rows = 30
 
-cols = 10
+cols = 30
 
 n_value = 0
 
@@ -37,6 +33,10 @@ def emit_map_status_to_clients():
     '''Sends the map state (list) values to all users.'''
     map_data = map.get_map()
     socketio.emit('map', map_data, broadcast=True)
+
+def emit_user_list_to_clients():
+    user_list = [user['username'] for user in users]
+    socketio.emit('users', user_list, broadcast=True)
 
 
 # Sockets
@@ -74,10 +74,9 @@ def user_is_authenticated(data):
     credentials = User.check_user_credentials(username, secret_key)
     if credentials:
         emit('user_is_authenticated', True)
-        print(True)
     else:
         emit('user_is_authenticated', False)
-        print(False)
+
 
 @socketio.on('map_print_instructions')
 def send_map_printing_instructions():
@@ -101,7 +100,6 @@ def user_direction(data):
 
     Args:
         data: dict with username, secret_key, and point (list of two values)
-
     '''
     try:
         username = data['username']
@@ -109,6 +107,11 @@ def user_direction(data):
         x, y = data['data']['point']
         credentials = User.check_user_credentials(username, secret_key)
         if credentials and map.check_if_point_in_map(x, y):
+            if map.check_if_point_in_use(x, y):
+                other_user = map.get_point(x, y)
+                if username != other_user:
+                    User.remove_user_in_database(other_user)
+                    emit_user_list_to_clients()
             user = users[int(credentials)]
             old_x, old_y = user['position']
             map.set_point_in_map(old_x, old_y, n_value)  # Clean old point in map
@@ -117,6 +120,7 @@ def user_direction(data):
             emit('user_direction', [x, y])               # Send new values to user
             emit_map_status_to_clients()                 # Update map for everyone
     except Exception as error:
+        print(error)
         emit('error', str(error))
 
 # Endpoints
