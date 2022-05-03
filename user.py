@@ -50,6 +50,17 @@ class User:
         users.append(user)
 
     @staticmethod
+    def remove_user_in_database(username) -> None:
+        '''Remove dict in the list of users.
+        
+        Args:
+            username: str.
+        '''
+        for index, user in enumerate(users):
+            if user['username'] == username:
+                users.pop(index)
+
+    @staticmethod
     def generate_random_position(rows: int, cols: int) -> list[int, int]:
         '''Generate a list with two values, [0] is x and [1] is y,
         this values are generate between 0 and row or column.
