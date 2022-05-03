@@ -3,6 +3,9 @@ export default class User {
         this.socket = socket;
     }
 
+    /**
+     * Return the credentials from localStorage.
+     */
     get_credentials() {
         return {
             username: localStorage.getItem('username'),

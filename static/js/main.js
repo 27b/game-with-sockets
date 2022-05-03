@@ -23,7 +23,7 @@ if (username && secret_key) {
 
 // Sockets listening
 socket.on('error', message => {
-    console.log(message)
+    console.log('SERVER ERROR: ' + message)
 })
 
 socket.on("new_user", new_user => {
@@ -32,7 +32,7 @@ socket.on("new_user", new_user => {
         localStorage.setItem('secret_key', new_user["secret_key"]);
         localStorage.setItem('position', JSON.stringify(new_user["position"]));
     } else {
-        this.create_login_input();
+        user.create_login_input();
     }
 });
 
@@ -46,6 +46,12 @@ socket.on('user_is_authenticated', bool => {
 
 socket.on('user_direction', position => {
     localStorage.setItem('position', JSON.stringify(position));
+})
+
+
+socket.on('users', array => {
+    let username = user.get_credentials()['username']
+    if (!array.includes(username)) user.create_login_input();
 })
 
 socket.on("map", data => {
@@ -74,7 +80,7 @@ socket.on("map", data => {
                     </div>`;
                 }
             } else {
-                tile.innerHTML = " ";
+                tile.innerHTML = "";
             }
         }
     }
@@ -96,6 +102,7 @@ socket.on("map_print_instructions", data => {
         container.appendChild(new_row);
     }
 });
+
 
 
 // Events
