@@ -12,7 +12,7 @@ class User:
         
         Args:
             username: The username to assing.
-
+        
         Returns:
             bool: If the username is valid.
         '''
@@ -50,7 +50,7 @@ class User:
         users.append(user)
 
     @staticmethod
-    def remove_user_in_database(username) -> None:
+    def remove_user_in_database(username: str) -> None:
         '''Remove dict in the list of users.
         
         Args:

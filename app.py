@@ -35,6 +35,7 @@ def emit_map_status_to_clients():
     socketio.emit('map', map_data, broadcast=True)
 
 def emit_user_list_to_clients():
+    '''Sends the user lists to all users.'''
     user_list = [user['username'] for user in users]
     socketio.emit('users', user_list, broadcast=True)
 
